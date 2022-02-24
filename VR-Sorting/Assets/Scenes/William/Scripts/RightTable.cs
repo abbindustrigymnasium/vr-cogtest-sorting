@@ -18,18 +18,22 @@ public class RightTable : MonoBehaviour
 
     void placeClones()
     {
-        clones.ForEach(delegate (GameObject clone)
+        //For loop för varje x och y värde
+        int cloneIndex = 0;
+        for (int z=0; z<2; z++)
         {
-            if (clone != null)
+            for (int y=0; y<2; y++)
             {
-                int cloneAdjust = 0;
-                int cloneIndex = clones.FindIndex(0, clones.Count, c => c == clone);
-                cloneAdjust = cloneIndex % 2 == 0 ? cloneAdjust++ : cloneAdjust // Funkar detta????
-                float yPos = boardSide.transform.position.y - (1 / board.transform.localScale.y) + (2 / board.transform.localScale.y) * ((cloneIndex) % 2);
-                float zPos = boardSide.GetComponent<Collider>().bounds.center.z + (1 / board.transform.localScale.z) + (4 / board.transform.localScale.z) * cloneAdjust;
-            clone.transform.position = new Vector3(boardSide.transform.position.x, yPos, zPos);
+                if (clones[cloneIndex] != null)
+                {
+                    GameObject clone = clones[cloneIndex];
+                    float yPos = boardSide.transform.position.y - (1 / board.transform.localScale.y) + (2 / board.transform.localScale.y) * y;
+                    float zPos = boardSide.GetComponent<Collider>().bounds.center.z - (2 / board.transform.localScale.z) + (4 / board.transform.localScale.z) * z;
+                    clone.transform.position = new Vector3(boardSide.transform.position.x-1*board.transform.localScale.x, yPos, zPos);
+                    cloneIndex++;
+                }
             }
-        });
+        }
     }
 
     // Korten måste "snappa" på plats, förbestämd eller programmerad?? Testar programmerad, om full ska byta plats!
@@ -42,8 +46,9 @@ public class RightTable : MonoBehaviour
             cards[newIndex] = other.gameObject;
             GameObject clone;
             clone = Instantiate(other, boardSide.transform).gameObject;
-            clone.transform.localScale = new Vector3(1 / (board.transform.localScale.x * 2), 1 / (board.transform.localScale.y * 2), 1 / (board.transform.localScale.z * 2));
             Destroy(clone.GetComponent<Rigidbody>());
+            clone.transform.localRotation = Quaternion.Euler(other.gameObject.transform.localRotation.x + 90f, 0, other.gameObject.transform.localRotation.z + 90f);
+            clone.transform.localScale = new Vector3(other.gameObject.transform.localScale.x / (board.transform.localScale.z), other.gameObject.transform.localScale.y / (board.transform.localScale.x), other.gameObject.transform.localScale.z / (board.transform.localScale.y));
             clones[newIndex] = clone;
             this.placeClones();
         }
