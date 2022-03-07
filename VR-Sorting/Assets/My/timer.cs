@@ -2,38 +2,73 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class Timer : MonoBehaviour
+
+public class timer : MonoBehaviour
 {
-    public float timeRemaining = 10;
-    public bool timerIsRunning = false;
-    public Text timeText;
-    private void Start()
+    public Slider timerSlider;
+
+    public TextMesh timerText;
+
+    public float gameTime;
+
+
+
+    private bool stopTimer;
+
+
+
+    void Start()
+
     {
-        // Starts the timer automatically
-        timerIsRunning = true;
+
+        stopTimer = false;
+
+        timerSlider.maxValue = gameTime;
+
+        timerSlider.value = gameTime;
+
+
+
     }
+
     void Update()
+
     {
-        if (timerIsRunning)
+
+        float time = gameTime - Time.time;
+
+
+
+        int minutes = Mathf.FloorToInt(time / 60);
+
+        int seconds = Mathf.FloorToInt(time - minutes * 60f);
+
+
+
+        string textTime = string.Format("{0:0}:{1:00}", minutes, seconds);
+
+
+
+        if (time <= 0)
+
         {
-            if (timeRemaining > 0)
-            {
-                timeRemaining -= Time.deltaTime;
-                DisplayTime(timeRemaining);
-            }
-            else
-            {
-                Debug.Log("Time has run out!");
-                timeRemaining = 0;
-                timerIsRunning = false;
-            }
+
+            stopTimer = true;
+
         }
+
+
+
+        if (stopTimer == false)
+
+        {
+
+            timerText.text = textTime;
+
+            timerSlider.value = time;
+
+        }
+
     }
-    void DisplayTime(float timeToDisplay)
-    {
-        timeToDisplay += 1;
-        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
-        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
-        timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-    }
+
 }
