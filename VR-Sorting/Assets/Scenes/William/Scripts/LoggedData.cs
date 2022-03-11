@@ -1,4 +1,4 @@
-/*using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,18 +12,19 @@ public class LoggedData : MonoBehaviour
     void OnEnable()
     {
         EventManager.onFinishedRound += FinishRound;
+        EventManager.onFinishedGame += FinishGame;
     }
 
-    private (int, int) findIndexErrors(GameObject[,] sorted)
+    private (int row, int col) findIndexErrors(Collider[,] errors) //Hitta om det finns något felplacerat kort (t.ex 5 kort på samma bord, inte godkänt.)
     {
-        IFound = -1;
-        JFound = -1;
+        int IFound = -1;
+        int JFound = -1;
 
         for (int i = 0; i < 2; i++)
         {
             for (int j = 0; j < 4; j++)
             {
-                if (sorted[i,j] != null)
+                if (errors[i,j] != null)
                 {
                     IFound = i;
                     JFound = j;
@@ -31,16 +32,22 @@ public class LoggedData : MonoBehaviour
                 }
             }
         }
-        return (IFound, JFound);
+        return (row: IFound, col: JFound);
     }
 
     void FinishRound()
     {
-        if (RightTable.misplaced.FindIndex()) errors++;
+        (int ErrorIndexRow, int ErrorIndexCol) = this.findIndexErrors(misplaced);
+
+        if (ErrorIndexRow == -1) errors++; // Straffa spelaren om det finns ett felplacerat kort
         else
         {
             Debug.Log("All 4 cards ");
         }
     }
+    void FinishGame()
+    {
+        // Lägg in all data där den ska vara!!!
+        // Kolla upp hur man loggar datan!!!
+    }
 }
-*/
