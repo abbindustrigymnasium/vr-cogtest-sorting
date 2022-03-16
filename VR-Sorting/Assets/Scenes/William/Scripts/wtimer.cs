@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class timer2 : MonoBehaviour
+public class wtimer : MonoBehaviour
 {
     //public Slider timerSlider;
 
     public TextMesh timerText;
-    public float time = 120f;
+    public float time = 150f;
 
     public bool stopTimer = true;
 
